@@ -136,8 +136,7 @@ class MobileNetV3(nn.Module):
         # building last several layers
         self.conv = nn.Sequential(
             conv_1x1_bn(input_channel, _make_divisible(exp_size * width_mult, 8)),
-            SELayer(_make_divisible(exp_size * width_mult, 8, input_size // 32), input_size // 32)
-            if mode == 'small' else nn.Sequential()
+            SELayer(_make_divisible(exp_size * width_mult, 8), input_size // 32) if mode == 'small' else nn.Sequential()
         )
 
         output_channel = _make_divisible(1280 * width_mult, 8) if width_mult > 1.0 else 1280
@@ -166,6 +165,18 @@ class MobileNetV3(nn.Module):
         x = x.view(x.size(0), -1)
         x = self.classifier(x)
         return x
+
+    def clean_and_load_state_dict(self, state_dict):
+        state_dict['classifier.0.weight'] = state_dict['classifier.1.weight']
+        state_dict['classifier.0.bias'] = state_dict['classifier.1.bias']
+        state_dict['classifier.3.weight'] = state_dict['classifier.5.weight']
+        state_dict['classifier.3.bias'] = state_dict['classifier.5.bias']
+
+        del state_dict['classifier.1.weight']
+        del state_dict['classifier.1.bias']
+        del state_dict['classifier.5.weight']
+        del state_dict['classifier.5.bias']
+        self.load_state_dict(state_dict)
 
     def _initialize_weights(self):
         for m in self.modules():
@@ -203,23 +214,26 @@ class MobileNetV3(nn.Module):
                 fc[2] = conv_2
 
 
-def mobilenetv3_small(**kwargs):
+def mobilenetv3_large(**kwargs):
     """
-    Constructs a MobileNetV3-Small model
+    Constructs a MobileNetV3-Large model
     """
     cfgs = [
         # k, t, c, SE, NL, s, p
-        [3,  16,  16, 1, 0, 2, 56],
-        [3,  72,  24, 0, 0, 2,  0],
-        [3,  88,  24, 0, 0, 1,  0],
-        [5,  96,  40, 1, 1, 2, 14],
-        [5, 240,  40, 1, 1, 1, 14],
-        [5, 240,  40, 1, 1, 1, 14],
-        [5, 120,  48, 1, 1, 1, 14],
-        [5, 144,  48, 1, 1, 1, 14],
-        [5, 288,  96, 1, 1, 2,  7],
-        [5, 576,  96, 1, 1, 1,  7],
-        [5, 576,  96, 1, 1, 1,  7],
+        [3,  16,  16, 0, 0, 1,  0],
+        [3,  64,  24, 0, 0, 2,  0],
+        [3,  72,  24, 0, 0, 1,  0],
+        [5,  72,  40, 1, 0, 2, 28],
+        [5, 120,  40, 1, 0, 1, 28],
+        [5, 120,  40, 1, 0, 1, 28],
+        [3, 240,  80, 0, 1, 2,  0],
+        [3, 200,  80, 0, 1, 1,  0],
+        [3, 184,  80, 0, 1, 1,  0],
+        [3, 184,  80, 0, 1, 1,  0],
+        [3, 480, 112, 1, 1, 1, 14],
+        [3, 672, 112, 1, 1, 1, 14],
+        [5, 672, 160, 1, 1, 1, 14],
+        [5, 672, 160, 1, 1, 2,  7],
+        [5, 960, 160, 1, 1, 1,  7]
     ]
-
-    return MobileNetV3(cfgs, mode='small', **kwargs)
+    return MobileNetV3(cfgs, mode='large', **kwargs)
