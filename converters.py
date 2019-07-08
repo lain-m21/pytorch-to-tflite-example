@@ -2,7 +2,7 @@ import shutil
 from pathlib import Path
 import onnx
 import tensorflow as tf
-import tensorflow.python.keras.backend as K
+from tensorflow.python.keras import backend as K
 from onnx2keras import onnx_to_keras
 
 
