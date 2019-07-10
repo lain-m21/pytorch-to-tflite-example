@@ -59,10 +59,12 @@ def main():
         torch_output = model_torch(input_tensor).data.numpy().reshape(-1, )
         tflite_output = get_tflite_outputs(input_array.transpose((0, 2, 3, 1)), tflite_model).reshape(-1, )
         logger.info(f'PyTorch - first 5 items: {torch_output[:5]}')
-        logger.info(f'TFLite - first 5 items: {tflite_output[:5]}\n')
+        logger.info(f'TFLite - first 5 items: {tflite_output[:5]}')
 
         torch_output_index = np.argmax(torch_output)
         tflite_output_index = np.argmax(tflite_output)
+        logger.info(f'PyTorch - argmax index: {torch_output_index}')
+        logger.info(f'TFLite - argmax index: {tflite_output_index}\n')
 
         if torch_output_index == tflite_output_index:
             num_same_outputs += 1
@@ -79,10 +81,12 @@ def main():
         torch_output = model_torch(input_tensor).data.numpy().reshape(-1, )
         tflite_output = get_tflite_outputs(input_array.transpose((0, 2, 3, 1)), tflite_quantized_model).reshape(-1, )
         logger.info(f'PyTorch - first 5 items: {torch_output[:5]}')
-        logger.info(f'TFLite - first 5 items: {tflite_output[:5]}\n')
+        logger.info(f'TFLite - first 5 items: {tflite_output[:5]}')
 
         torch_output_index = np.argmax(torch_output)
         tflite_output_index = np.argmax(tflite_output)
+        logger.info(f'PyTorch - argmax index: {torch_output_index}')
+        logger.info(f'TFLite - argmax index: {tflite_output_index}\n')
 
         if torch_output_index == tflite_output_index:
             num_same_outputs += 1
