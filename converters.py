@@ -44,3 +44,5 @@ def savedmodel2tflite(saved_model_dir, tflite_model_path, quantize=False):
 
     with open(tflite_model_path, 'wb') as f:
         f.write(tflite_model)
+
+    return tflite_model
