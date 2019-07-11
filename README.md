@@ -16,4 +16,10 @@ Python packages:
 
 ## Usage
 
+### Download weights
+    
+    ./download_weight.sh
+
+### Run the script
+
     python3 main.py
