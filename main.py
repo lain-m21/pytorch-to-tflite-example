@@ -10,6 +10,7 @@ from tflite import get_tflite_outputs
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
+logger.addHandler(logging.StreamHandler()) 
 
 
 def main():
