@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-git clone git@github.com:d-li14/mobilenetv3.pytorch.git ./tmp
-
 mkdir pretrained
-cp ./tmp/pretrained/* ./pretrained/
-rm -rf ./tmp
+cd pretrained
+wget https://github.com/d-li14/mobilenetv3.pytorch/raw/master/pretrained/mobilenetv3-large-657e7b3d.pth
+
