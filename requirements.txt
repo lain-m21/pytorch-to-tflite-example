@@ -1,5 +1,5 @@
 Keras==2.2.4
-onnx==1.5.0
+onnx==1.13.0
 onnx2keras==0.0.3
 tensorflow==1.14.0
 torch==1.1.0
